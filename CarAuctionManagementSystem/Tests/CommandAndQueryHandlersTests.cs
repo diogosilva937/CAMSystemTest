@@ -20,7 +20,6 @@ namespace Tests
         [Fact]
         public void AddVehicle_ShouldThrowWhenRegistrationAlreadyExists()
         {
-            // Arrange
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var cmd = new AddVehicleCommand
@@ -34,10 +33,8 @@ namespace Tests
                 NumberOfSeats = 4
             };
 
-            // Act - first add should succeed
             var created = vehicleHandler.Handle(cmd);
 
-            // Act & Assert - second add with same registration should raise an error
             var duplicate = new AddVehicleCommand
             {
                 RegistrationNumber = "REG-123",
@@ -49,15 +46,12 @@ namespace Tests
                 NumberOfSeats = 4
             };
 
-            // Expected behaviour: application should prevent duplicate registration.
-            // If not implemented yet, this test will fail and highlight missing validation.
             Assert.Throws<InvalidOperationException>(() => vehicleHandler.Handle(duplicate));
         }
 
         [Fact]
         public void StartAuction_ShouldFailWhenVehicleDoesNotExist()
         {
-            // Arrange
             using var ctx = CreateContext();
             var auctionHandler = new CommandAuctionHandler(ctx);
 
@@ -68,14 +62,12 @@ namespace Tests
                 isActive = true
             };
 
-            // Act & Assert
             Assert.Throws<InvalidOperationException>(() => auctionHandler.Handle(cmd));
         }
 
         [Fact]
         public void StartAuction_ShouldFailWhenVehicleAlreadyInActiveAuction()
         {
-            // Arrange
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var auctionHandler = new CommandAuctionHandler(ctx);
@@ -99,10 +91,10 @@ namespace Tests
                 VehicleRegistrationNumber = "V-100",
                 isActive = true
             };
-            // first auction for vehicle - should succeed
+
             var createdAuction = auctionHandler.Handle(auctionCmd1);
 
-            // second auction for same vehicle while the first is active - should fail
+
             var auctionCmd2 = new AddAuctionCommand
             {
                 AuctionName = "AUCTION-2",
@@ -116,7 +108,7 @@ namespace Tests
         [Fact]
         public void PlaceBid_ShouldFailWhenAuctionNotActive()
         {
-            // Arrange
+
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var auctionHandler = new CommandAuctionHandler(ctx);
@@ -151,14 +143,13 @@ namespace Tests
                 Amount = 400m
             };
 
-            // Act & Assert
+
             Assert.Throws<InvalidOperationException>(() => bidHandler.Handle(bidCmd));
         }
 
         [Fact]
         public void PlaceBid_ShouldFailWhenAmountNotHigherThanCurrentHighest()
         {
-            // Arrange
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var auctionHandler = new CommandAuctionHandler(ctx);
@@ -185,7 +176,6 @@ namespace Tests
             };
             auctionHandler.Handle(auctionCmd);
 
-            // Place an initial valid bid
             var initialBid = new AddBidCommand
             {
                 AuctionName = "AUCTION-ACTIVE",
@@ -194,7 +184,6 @@ namespace Tests
             };
             bidHandler.Handle(initialBid);
 
-            // Try to place a lower bid
             var lowBid = new AddBidCommand
             {
                 AuctionName = "AUCTION-ACTIVE",
@@ -208,7 +197,6 @@ namespace Tests
         [Fact]
         public void PlaceBid_ShouldSucceedWhenValid()
         {
-            // Arrange
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var auctionHandler = new CommandAuctionHandler(ctx);
@@ -248,7 +236,7 @@ namespace Tests
             Assert.Equal("Alice", result.bidderName);
             Assert.Equal(900m, result.amount);
 
-            // Verify a bid record was created in the DB
+
             var bidsInDb = ctx.Bids.Where(b => b.AuctionName == "AUCTION-OK").ToList();
             Assert.Single(bidsInDb);
             Assert.Equal(900m, bidsInDb[0].Amount);
@@ -257,7 +245,7 @@ namespace Tests
         [Fact]
         public void QueryVehicleHandler_FilteringBehaviours()
         {
-            // Arrange
+
             using var ctx = CreateContext();
             var vehicleHandler = new CommandVehicleHandler(ctx);
             var queryHandler = new QueryVehicleHandler(ctx);
@@ -284,18 +272,15 @@ namespace Tests
                 NumberOfSeats = 5
             });
 
-            // Act: filter by Type = "SUV"
             var queryByType = new GetVehicleQuery { Type = "SUV" };
             var suvList = queryHandler.Handle(queryByType);
             Assert.Single(suvList);
             Assert.Equal("Q-1", suvList[0].registrationNumber);
 
-            // Act: filter by Manufacturer + Model
             var queryByMakeModel = new GetVehicleQuery { Manufacturer = "MakeA", Model = "M1" };
             var listByMakeModel = queryHandler.Handle(queryByMakeModel);
             Assert.Equal(2, listByMakeModel.Count);
 
-            // Act: filter by Year
             var queryByYear = new GetVehicleQuery { Year = 2015 };
             var listByYear = queryHandler.Handle(queryByYear);
             Assert.Equal(2, listByYear.Count);
