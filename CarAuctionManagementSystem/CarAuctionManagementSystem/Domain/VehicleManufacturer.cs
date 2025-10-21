@@ -6,7 +6,7 @@
         public string Name { get; private set; }
         public List<VehicleModel> Models { get; private set; } = new();
 
-        protected VehicleManufacturer() { } // Required by EF Core
+        protected VehicleManufacturer() { }
 
         public VehicleManufacturer(string name)
         {

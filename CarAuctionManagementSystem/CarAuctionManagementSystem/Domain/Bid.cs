@@ -10,7 +10,7 @@
         public string AuctionName { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-        protected Bid() { } // Required by EF Core
+        protected Bid() { }
 
         public Bid(string bidderName, decimal amount, Auction bidAuction)
         {

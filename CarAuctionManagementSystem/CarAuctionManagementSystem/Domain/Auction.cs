@@ -29,11 +29,6 @@
         {
             if (!IsActive)
                 throw new InvalidOperationException("Cannot place bid on inactive auction.");
-
-            //ADD VERIFICATION IN SERVICE
-            //if (Bids.Count > 0 && bid.Amount <= Bids.Max(b => b.Amount))
-                //throw new InvalidOperationException("Bid amount must be higher than the current highest bid.");
-
             Bids.Add(bid);
         }
 

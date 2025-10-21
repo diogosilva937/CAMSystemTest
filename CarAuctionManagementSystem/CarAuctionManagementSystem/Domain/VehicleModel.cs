@@ -4,12 +4,10 @@
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
-
-        // Explicit back-reference to Manufacturer (aggregate root)
         public Guid ManufacturerId { get; private set; }
         public VehicleManufacturer Manufacturer { get; private set; }
 
-        protected VehicleModel() { } // Required by EF Core
+        protected VehicleModel() { } 
 
         public VehicleModel(string name, VehicleManufacturer manufacturer)
         {

@@ -4,7 +4,7 @@
     {
         public int NumberOfDoors { get; private set; }
 
-        protected Sedan() { } // EF Core
+        protected Sedan() { }
 
         public Sedan(string registrationNumber, VehicleModel model, int year, decimal startingBid, int numberOfDoors)
             : base(registrationNumber, model, year, startingBid)

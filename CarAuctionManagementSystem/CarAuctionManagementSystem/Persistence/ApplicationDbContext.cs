@@ -116,8 +116,6 @@ namespace CarAuctionManagementSystem.Persistence
             });
         }
 
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseInMemoryDatabase("carauctionsystem");

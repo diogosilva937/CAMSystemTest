@@ -2,7 +2,7 @@
 {
     public abstract class Vehicle
     {
-        public string RegistrationNumber { get; private set; } // Primary key
+        public string RegistrationNumber { get; private set; }
 
         public Guid ModelId { get; private set; }
         public VehicleModel Model { get; private set; }
@@ -10,7 +10,7 @@
         public int Year { get; private set; }
         public decimal StartingBid { get; private set; }
 
-        protected Vehicle() { } // EF Core
+        protected Vehicle() { }
 
         protected Vehicle(string registrationNumber, VehicleModel model, int year, decimal startingBid)
         {
