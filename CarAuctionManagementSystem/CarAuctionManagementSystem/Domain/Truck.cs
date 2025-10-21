@@ -4,8 +4,10 @@
     {
         public double LoadCapacity { get; set; }
 
-        public Truck(Guid id, VehicleModel model, int year, decimal startingBid, double loadCapacity)
-            : base(id, model, year, startingBid)
+        protected Truck() { }
+
+        public Truck(string registrationNumber, VehicleModel model, int year, decimal startingBid, double loadCapacity)
+            : base(registrationNumber, model, year, startingBid)
         {
             LoadCapacity = loadCapacity;
         }

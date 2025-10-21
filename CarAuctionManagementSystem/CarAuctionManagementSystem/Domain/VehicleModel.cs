@@ -4,7 +4,12 @@
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
+
+        // Explicit back-reference to Manufacturer (aggregate root)
+        public Guid ManufacturerId { get; private set; }
         public VehicleManufacturer Manufacturer { get; private set; }
+
+        protected VehicleModel() { } // Required by EF Core
 
         public VehicleModel(string name, VehicleManufacturer manufacturer)
         {
@@ -14,16 +19,9 @@
 
             Id = Guid.NewGuid();
             Name = name.Trim();
+            ManufacturerId = manufacturer.Id;
         }
 
-        public override string ToString() => $"{Manufacturer.Name} {Name}";
-
-        public override bool Equals(object obj)
-            => obj is VehicleModel other &&
-               string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
-               Manufacturer.Equals(other.Manufacturer);
-
-        public override int GetHashCode()
-            => HashCode.Combine(Name.ToLowerInvariant(), Manufacturer);
+        public override string ToString() => $"{Manufacturer?.Name} {Name}";
     }
 }

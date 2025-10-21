@@ -2,38 +2,37 @@
 {
     public class Auction
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string AuctionName { get; set; }
+        public string VehicleRegistrationNumber { get; private set; }
         public Vehicle Vehicle { get; private set; }
         public bool IsActive { get; private set; }
         public List<Bid> Bids { get; private set; } = new List<Bid>();
 
-        public Auction(Vehicle vehicle)
+        protected Auction() { }
+
+        public Auction(string AuctionName, Vehicle vehicle, bool isActive)
         {
+            if (string.IsNullOrWhiteSpace(AuctionName))
+                throw new ArgumentException("Auction name cannot be empty.", nameof(AuctionName));
+            this.AuctionName = AuctionName;
             Vehicle = vehicle ?? throw new ArgumentNullException(nameof(vehicle));
-            IsActive = false;
+            VehicleRegistrationNumber = vehicle.RegistrationNumber;
+            IsActive = isActive;
         }
 
-        public void Start()
+        public void SetActive(bool isActive)
         {
-            if (IsActive)
-                throw new InvalidOperationException("Auction is already active.");
-            IsActive = true;
+            IsActive = isActive;
         }
 
-        public void Close()
-        {
-            if (!IsActive)
-                throw new InvalidOperationException("Auction is not active.");
-            IsActive = false;
-        }
-
-        public void PlaceBid(Bid bid)
+        public void AddBid(Bid bid)
         {
             if (!IsActive)
                 throw new InvalidOperationException("Cannot place bid on inactive auction.");
 
-            if (Bids.Count > 0 && bid.Amount <= Bids.Max(b => b.Amount))
-                throw new InvalidOperationException("Bid amount must be higher than the current highest bid.");
+            //ADD VERIFICATION IN SERVICE
+            //if (Bids.Count > 0 && bid.Amount <= Bids.Max(b => b.Amount))
+                //throw new InvalidOperationException("Bid amount must be higher than the current highest bid.");
 
             Bids.Add(bid);
         }

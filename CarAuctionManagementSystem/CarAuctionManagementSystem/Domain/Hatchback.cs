@@ -4,8 +4,10 @@
     {
         public int NumberOfDoors { get; set; }
 
-        public Hatchback(Guid id, VehicleModel model, int year, decimal startingBid, int numberOfDoors)
-            : base(id, model, year, startingBid)
+        protected Hatchback() { }
+
+        public Hatchback(string registrationNumber, VehicleModel model, int year, decimal startingBid, int numberOfDoors)
+            : base(registrationNumber, model, year, startingBid)
         {
             NumberOfDoors = numberOfDoors;
         }

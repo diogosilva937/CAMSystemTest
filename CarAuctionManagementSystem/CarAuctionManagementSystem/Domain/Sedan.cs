@@ -2,11 +2,16 @@
 {
     public class Sedan : Vehicle
     {
-        public int NumberOfDoors { get; set; }
+        public int NumberOfDoors { get; private set; }
 
-        public Sedan(Guid id, VehicleModel model, int year, decimal startingBid, int numberOfDoors)
-            : base(id, model, year, startingBid)
+        protected Sedan() { } // EF Core
+
+        public Sedan(string registrationNumber, VehicleModel model, int year, decimal startingBid, int numberOfDoors)
+            : base(registrationNumber, model, year, startingBid)
         {
+            if (numberOfDoors <= 0)
+                throw new ArgumentOutOfRangeException(nameof(numberOfDoors), "Number of doors must be positive.");
+
             NumberOfDoors = numberOfDoors;
         }
     }
